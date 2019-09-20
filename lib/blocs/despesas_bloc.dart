@@ -172,8 +172,6 @@ void setFilterDespesas(String s){
     int _dias = DateTime.now().difference(_dataDesp).inDays;
     if (appData.wtlFiltroFin == "T")
      return true;
-    if (appData.wtlFiltroFin == "T")
-     return true;
     if(_dias > int.parse(appData.wtlFiltroFin))
      return false; 
     else

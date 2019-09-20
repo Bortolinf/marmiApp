@@ -11,11 +11,6 @@ void clientesReport()  async {
 
   final Document pdf = Document();
 
-  List <String> dados = [];
-  dados.add("ladfksdffsd");
-  dados.add("lkasjfoisjfkljsdlfj");
-  dados.add("flurkin");
-  
   // colunas do cabeçalho
   List <String> cab = [];
   cab.add("Nome");

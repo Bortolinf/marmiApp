@@ -1,11 +1,16 @@
 import 'package:marmi_app/reports/clientes_report.dart';
-import 'package:marmi_app/reports/financeiro_report.dart';
 import 'package:flutter/material.dart';
+import 'package:marmi_app/reports/rel_financeiro_dialog.dart';
 import 'package:marmi_app/widgets/menu_button.dart';
 
 const Color _kFlutterBlue = Color(0xFF003D75);
 
-class RelatoriosPage extends StatelessWidget {
+class RelatoriosPage extends StatefulWidget {
+  @override
+  _RelatoriosPageState createState() => _RelatoriosPageState();
+}
+
+class _RelatoriosPageState extends State<RelatoriosPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,22 +24,25 @@ class RelatoriosPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             MenuButton(
-              "Financeiro",
-              Icon(
-                Icons.monetization_on,
-                size: 50.0,
-                color: _kFlutterBlue,
-              ),
-              onPressed: () => financeiroReport(),
-            ),
-            MenuButton(
               "Programação",
               Icon(
                 Icons.date_range,
                 size: 50.0,
                 color: _kFlutterBlue,
               ),
-              onPressed: () => financeiroReport(),
+              onPressed: ()  => clientesReport(),
+            ),
+            MenuButton(
+              "Financeiro",
+              Icon(
+                Icons.monetization_on,
+                size: 50.0,
+                color: _kFlutterBlue,
+              ),
+              onPressed: () {
+                   showDialog(
+              context: context, builder: (context) => RelFinanceiroDialog());
+              }, 
             ),
             MenuButton(
               "Clientes",
@@ -50,6 +58,8 @@ class RelatoriosPage extends StatelessWidget {
       ),
     );
   }
+
+
 } // fim de tudo
 
 // RaisedButton(

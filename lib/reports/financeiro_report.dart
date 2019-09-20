@@ -2,45 +2,105 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:marmi_app/domain/singleton.dart';
+import 'package:marmi_app/utils/date_utils.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 
-void financeiroReport()  async {
+
+void financeiroReport(int dias, bool geraReceita, bool geraDespesa)  async {
+
+ // int dias;
+  print("cheguei no repor financeiro c/ $dias dias");
 
   final Document pdf = Document();
 
-  List <String> dados = [];
-  dados.add("ladfksdffsd");
-  dados.add("lkasjfoisjfkljsdlfj");
-  dados.add("flurkin");
+  List <String> cabRec = [];
+  List <String> cabDesp = [];
+  List <String> cabDadosRec = [];
+  List <String> cabDadosDesp = [];
+  List <List<String>> relatoDesp = [];
+  List <List<String>> relatoRec = [];
+
   
-  // colunas do cabeçalho
-  List <String> cab = [];
-  cab.add("Nome");
-  cab.add("Endereço");
-  cab.add("Telefone");
+  // colunas do cabeçalho - Receitas
+  cabRec.add("Data");
+  cabRec.add("Cliente");
+  cabRec.add("Obs");
+  cabRec.add("Valor");
 
-  List <String> cabDados = [];
+  // colunas do cabeçalho - Despesas
+  cabDesp.add("Data");
+  cabDesp.add("Descrição");
+  cabDesp.add("Valor");
 
-  List <List<String>> relato = [];
-  relato.add(cab);
- // aqui vai pegar dados dos clientes do Bloc
 
+  relatoDesp.add(cabDesp);
+  relatoRec.add(cabRec);
+
+
+ // aqui vai pegar dados das Despesas
+  if (geraDespesa) {
+    double totalDesp = 0.0; 
   QuerySnapshot cliQuery = await Firestore.instance.collection("makers")
               .document(appData.uid)
-              .collection("clientes")
-              .orderBy("nome") 
+              .collection("despesas")
+             // .orderBy("nome") 
               .getDocuments();
 
-  cliQuery.documents.forEach((cli){
-    cabDados = [];
-    cabDados.add(cli["nome"]);
-    cabDados.add(cli["endereco"]);
-    cabDados.add(cli["telefone"]);
-    relato.add(cabDados);
+  cliQuery.documents.forEach((desp){
+    if (_testaVisible(desp, dias)) {
+      cabDadosDesp = [];
+      cabDadosDesp.add(desp["data"]);
+      cabDadosDesp.add(desp["descricao"]);
+      totalDesp += desp["valor"];
+      cabDadosDesp.add(desp["valor"].toStringAsFixed(2));
+      relatoDesp.add(cabDadosDesp);
+    }
   });
+      // linha do total
+      cabDadosDesp = [];
+      cabDadosDesp.add("TOTAL");
+      cabDadosDesp.add("");
+      cabDadosDesp.add(totalDesp.toStringAsFixed(2));
+      relatoDesp.add(cabDadosDesp);
+
+  } // fim do teste geraDespesa
+
+
+
+
+ // aqui vai pegar dados das Receitas
+  if (geraReceita) {
+    double totalRec = 0.0;
+  QuerySnapshot cliQuery = await Firestore.instance.collection("makers")
+              .document(appData.uid)
+              .collection("receitas")
+             // .orderBy("nome") 
+              .getDocuments();
+
+  cliQuery.documents.forEach((rec){
+    if (_testaVisible(rec, dias)) {
+        cabDadosRec = [];
+        cabDadosRec.add(rec["data"]);
+        cabDadosRec.add(rec["clienteNome"] ?? "");
+        cabDadosRec.add(rec["descricao"]);
+        cabDadosRec.add(rec["valor"].toStringAsFixed(2));
+        totalRec += rec["valor"];
+        relatoRec.add(cabDadosRec);
+    }
+  });
+  // linha do total
+        cabDadosRec = [];
+        cabDadosRec.add("TOTAL");
+        cabDadosRec.add("");
+        cabDadosRec.add("");
+        cabDadosRec.add(totalRec.toStringAsFixed(2));
+        relatoRec.add(cabDadosRec);
+
+  } // fim do teste geraReceita
+
 
 
 
@@ -83,11 +143,21 @@ void financeiroReport()  async {
                       Text('Movimentação Financeira', textScaleFactor: 2),
                       PdfLogo()
                     ])),
-            Header(level: 1, text: 'Despesas'),
-            Paragraph(
+            geraDespesa ?  Header(level: 1, text: 'Despesas') : Container(),
+            geraDespesa ? Paragraph(
                 text:
-                    "Vamos colocar aqui em baixo uma relação das suas despesas"),
-            Table.fromTextArray(context: context, data: relato),
+                    "Vamos colocar aqui em baixo uma relação das suas despesas")
+                    : Container(),
+            geraDespesa ? Table.fromTextArray(context: context, data: relatoDesp) : Container(),        
+
+            geraReceita ?  Header(level: 1, text: 'Receitas') : Container(),
+            geraReceita ? Paragraph(
+                text:
+                    "Vamos colocar aqui em baixo uma relação das suas receitas")
+                    : Container(),
+            geraReceita ? Table.fromTextArray(context: context, data: relatoRec) : Container(),        
+
+
             Padding(padding: const EdgeInsets.all(10)),
             Paragraph(
                 text:
@@ -95,7 +165,7 @@ void financeiroReport()  async {
           ]));
 
  Directory appDocDir = await getApplicationDocumentsDirectory();
- var targetFileName = appDocDir.path + "/example-pdf";
+ var targetFileName = appDocDir.path + "/financas-pdf";
  print(targetFileName);
     
   final File file = File(targetFileName);
@@ -103,4 +173,17 @@ void financeiroReport()  async {
 
   OpenFile.open(targetFileName);
   
+} // fim de tudo
+
+
+
+
+// testa se a data do lancamento deve ser exibida
+bool _testaVisible(DocumentSnapshot desp, int dias){
+  var _dataDesp = rdtDMA10toDate(desp["data"]);
+  int _dias = DateTime.now().difference(_dataDesp).inDays;
+  if(_dias > dias)
+    return false; 
+  else
+    return true;
 }
