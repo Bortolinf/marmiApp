@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1067032582057-ee80o997fa8uo937711qm5t4t908dh3d.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1067032582057-ee80o997fa8uo937711qm5t4t908dh3d</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>1067032582057-083vb0oeoft4ug50t2ueftrrgtoh7pl1.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyB6vQDTmNllHOtXyN_HylPOO4EpajPf3v4</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1067032582057</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.bortofurlanetto.marmiapp</string>
+	<key>PROJECT_ID</key>
+	<string>marmiapp-66277</string>
+	<key>STORAGE_BUCKET</key>
+	<string>marmiapp-66277.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1067032582057:ios:75ed2651686180aa7416b8</string>
+	<key>DATABASE_URL</key>
+	<string>https://marmiapp-66277.firebaseio.com</string>
+</dict>
+</plist>

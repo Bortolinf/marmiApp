@@ -42,7 +42,10 @@ class _EditReceitaDialogState extends State<EditReceitaDialog> {
                   }
                 : {},
             autovalidate: true,
-            child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
               FormBuilderTextField(
                   attribute: "descricao",
                   decoration: InputDecoration(labelText: "Descrição:"),
@@ -60,7 +63,9 @@ class _EditReceitaDialogState extends State<EditReceitaDialog> {
                     FormBuilderValidators.required(
                         errorText: "Informar o Valor")
                   ]),
-              _selecaoCliente(context),
+                  appData.wtlopc == "A"
+                  ?  _clienteSalvo(context)
+                  :  _selecaoCliente(context),
             ]),
           ),
           SizedBox(
@@ -105,6 +110,17 @@ class _EditReceitaDialogState extends State<EditReceitaDialog> {
             ],
           ),
         ]);
+  }
+
+
+  _clienteSalvo(context) {
+    return
+     Padding(
+       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+       child: 
+       Text("Cliente: ${appData.wtlRecCliNome}",
+        style: TextStyle(fontSize: 16), ),
+     );
   }
 
   _selecaoCliente(context) {

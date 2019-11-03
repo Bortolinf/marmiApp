@@ -7,9 +7,13 @@ import 'package:rxdart/rxdart.dart';
 class ClientesBloc extends BlocBase {
 
   final _clientesController = BehaviorSubject<List>();
+  Stream<List> get outClientes => _clientesController.stream; 
   final _loadingController = BehaviorSubject<bool>.seeded(false);
 
+  Map<String, Map<String, dynamic>> _clientes = {};
 
+  // outClientes2 é o método mais simples de fazer o retorno do bloc c/dados do Firebase
+  // porem este nao funcionava para fazer os filtros de pesquisa por nome
   Stream<List> outClientes2; 
 
 
@@ -20,8 +24,13 @@ class ClientesBloc extends BlocBase {
   // isso e apens um simplificacao p/nao precisar ficar repetindo
   Firestore _firestore = Firestore.instance;
 
+
+
   // contrutor escuitador 
   ClientesBloc(){
+
+    // ativa metodo de varredura no firebase
+    _addClientesListener();
 
   // declarando a consulta somente da primeira vez que esse bloc for criado
     outClientes2 =   _firestore.collection("makers")
@@ -31,7 +40,77 @@ class ClientesBloc extends BlocBase {
               .snapshots()
               // transformando os itens vindos do firestore em uma lista de document
               .map((e) => e.documents);
+
   }
+
+
+
+  // funcao para quando for digitado o texto de busca
+  void onChangedSearch(String search){
+    if(search.trim().isEmpty){
+      //sem filtro
+      _clientesController.add(_clientes.values.toList());
+    }else {
+      _clientesController.add(_filter(search.trim()));
+    }
+  }
+
+// funcao que faz o filtro e retorna apenas os dados que atendem a pesquisa
+ //  tipo do   retorno     
+ List<Map<String, dynamic>> _filter(String search){
+     // copia para ela todo o conteudo da lista original de usuarios
+   List<Map<String, dynamic>> filteredClientes = List.from(_clientes.values.toList());
+     // essa funcao legalzona faz um teste que mantem na lista quem retornar true
+    filteredClientes.retainWhere((cli){
+        return cli["nome"].toUpperCase().contains(search.toUpperCase());
+    } );
+    // retorno da funcao
+    return filteredClientes;
+ }
+
+
+
+  // funcao que iscuita - é chamada no contrutor
+  // VAMOS LÁ: esta funcao esta escutando apenas as variacoes nos uruarios
+  // aquele forEach recebe a relacao de cada mudança (change)
+  // depois verifica qual o tipo de alteracao (inclusao/alteraca/exclusa)
+  // e por fim faz o tratamento conforme o tipo de alteracao
+  void _addClientesListener(){
+     _firestore.collection("makers")
+              .document(appData.uid)
+              .collection("clientes")
+              .orderBy("nome") 
+              .snapshots().listen((snapshot){
+      snapshot.documentChanges.forEach((change){
+        print("Listenner : ${change.document.documentID}");
+        String uid = change.document.documentID;
+        switch(change.type){
+          case DocumentChangeType.added:
+            _clientes[uid] = change.document.data;
+            _clientes[uid]["id"] = uid; 
+            _clientesController.add(_clientes.values.toList());
+            break;
+
+          case DocumentChangeType.modified:
+            _clientes[uid].addAll(change.document.data);
+            // atualiza os dados do usu no Controller
+            _clientesController.add(_clientes.values.toList());
+            break;
+
+          case DocumentChangeType.removed:
+            _clientes.remove(uid);
+            _clientesController.add(_clientes.values.toList());
+            break;
+        }
+      });
+    });
+  }
+
+
+
+
+
+
 
 
 

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:marmi_app/domain/singleton.dart';
 import 'package:marmi_app/pages/clientes_page.dart';
 import 'package:marmi_app/pages/produtos_page.dart';
+import 'package:marmi_app/pages/programacao_page.dart';
 import 'package:marmi_app/pages/relatorios_page.dart';
 import 'package:marmi_app/utils/nav.dart';
 //import 'package:marmi_app/firebase/firebase_service.dart';
@@ -60,7 +61,7 @@ class HomePage extends StatelessWidget {
     List<ItemMenu> menuItens = [
       ItemMenu("Meus Clientes", Icon(Icons.people, size: 50.0, color: _kFlutterBlue,), onClickClientes),
       ItemMenu("Produtos", Icon(Icons.shopping_basket, size: 50.0, color: _kFlutterBlue,), onClickProdutos),
-      ItemMenu("Programação", Icon(Icons.date_range, size: 50.0, color: _kFlutterBlue,), onClickClientes),
+      ItemMenu("Programação", Icon(Icons.date_range, size: 50.0, color: _kFlutterBlue,), onClickProgramacao),
       ItemMenu("Finanças", Icon(Icons.monetization_on, size: 50.0, color: _kFlutterBlue,) ,onClickFinancas),
       ItemMenu("Relatórios", Icon(Icons.receipt, size: 50.0, color: _kFlutterBlue,) ,onClickRelatorios),
     ];
@@ -94,6 +95,11 @@ _itemView(context, List<ItemMenu> menuItens, int index) {
 
   void onClickClientes(BuildContext context) async {
     String s = await push(context, ClientesPage());
+    print(">> $s");
+  }
+
+  void onClickProgramacao(BuildContext context) async {
+    String s = await push(context, ProgramacaoPage());
     print(">> $s");
   }
 

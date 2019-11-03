@@ -85,7 +85,7 @@ class _CalendarCliState extends State<CalendarCli> {
                                   borderRadius:
                                       new BorderRadius.circular(180.0)),
                               color: Theme.of(context).accentColor,
-                              child: snapshot.data
+                              child: !snapshot.hasData
                                   ? CircularProgressIndicator(
                                       valueColor:
                                           AlwaysStoppedAnimation(Colors.white),

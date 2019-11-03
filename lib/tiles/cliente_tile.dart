@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:marmi_app/domain/marmi.dart';
 import 'package:marmi_app/domain/singleton.dart';
 import 'package:marmi_app/pages/backdrop_cli.dart';
+import 'package:marmi_app/pages/prog_cli_page.dart';
+import 'package:marmi_app/utils/nav.dart';
 
 class ClienteTile extends StatelessWidget {
   final String uid = appData.uid;
@@ -46,10 +48,21 @@ class ClienteTile extends StatelessWidget {
             Flexible(              
               flex: 1,              
               child: 
-              Text("${cliente.pessoas.toString()} ",
-              style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CircleAvatar(backgroundColor: Theme.of(context).accentColor,
+                child: IconButton(
+                  icon: Icon(Icons.date_range),
+                  onPressed: (){
+                     cliente.toWtl();
+                    push(context,ProgrCliPage()); 
+                  },
+                ),
+                ),
+              ),
             ),
 
+          
           ],
 
         )

@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 import 'package:marmi_app/domain/singleton.dart';
-import 'package:marmi_app/utils/date_utils.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
@@ -46,13 +46,13 @@ void financeiroReport(int dias, bool geraReceita, bool geraDespesa)  async {
   QuerySnapshot cliQuery = await Firestore.instance.collection("makers")
               .document(appData.uid)
               .collection("despesas")
-             // .orderBy("nome") 
+              .orderBy("data") 
               .getDocuments();
 
   cliQuery.documents.forEach((desp){
     if (_testaVisible(desp, dias)) {
       cabDadosDesp = [];
-      cabDadosDesp.add(desp["data"]);
+      cabDadosDesp.add(DateFormat('dd-MM-yyyy').format(desp["data"].toDate()));
       cabDadosDesp.add(desp["descricao"]);
       totalDesp += desp["valor"];
       cabDadosDesp.add(desp["valor"].toStringAsFixed(2));
@@ -77,13 +77,13 @@ void financeiroReport(int dias, bool geraReceita, bool geraDespesa)  async {
   QuerySnapshot cliQuery = await Firestore.instance.collection("makers")
               .document(appData.uid)
               .collection("receitas")
-             // .orderBy("nome") 
+              .orderBy("data") 
               .getDocuments();
 
   cliQuery.documents.forEach((rec){
     if (_testaVisible(rec, dias)) {
         cabDadosRec = [];
-        cabDadosRec.add(rec["data"]);
+        cabDadosRec.add(DateFormat('dd-MM-yyyy').format(rec["data"].toDate()));
         cabDadosRec.add(rec["clienteNome"] ?? "");
         cabDadosRec.add(rec["descricao"]);
         cabDadosRec.add(rec["valor"].toStringAsFixed(2));
@@ -180,8 +180,7 @@ void financeiroReport(int dias, bool geraReceita, bool geraDespesa)  async {
 
 // testa se a data do lancamento deve ser exibida
 bool _testaVisible(DocumentSnapshot desp, int dias){
-  var _dataDesp = rdtDMA10toDate(desp["data"]);
-  int _dias = DateTime.now().difference(_dataDesp).inDays;
+  int _dias = DateTime.now().difference(desp["data"].toDate()).inDays;
   if(_dias > dias)
     return false; 
   else

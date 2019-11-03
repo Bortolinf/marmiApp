@@ -25,10 +25,10 @@ O App pretende fornecer ao usuário uma visão de quem são os seus clientes, qual 
 
 ## Itens a Serem Desenvolvidos
 
-- [ ] Programação diária
-- [ ] Imagem da Splah Screen
-- [ ] Incluir opção de relatório
-- [ ] Gerar relatórios em PDF
+- [X] Programação diária
+- [X] Imagem da Splah Screen
+- [X] Incluir opção de relatório
+- [X] Gerar relatórios em PDF
 
 
 ## Agradecimentos

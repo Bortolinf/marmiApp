@@ -18,21 +18,58 @@ class ClientesPage extends StatefulWidget {
 class _ClientesPageState extends State<ClientesPage> {
 
  final ClientesBloc _cliBloc = BlocProvider.getBloc<ClientesBloc>();
+ Widget appBarTitle = new Text("Clientes");
+  Icon actionIcon = new Icon(Icons.search);
+
 
   @override
 
 
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
-        title: Text("Clientes"),
+        centerTitle: true,
+        title:appBarTitle,
+        actions: <Widget>[
+          new IconButton(icon: actionIcon,onPressed:(){
+          setState(() {
+                     if ( this.actionIcon.icon == Icons.search){
+                      this.actionIcon =  Icon(Icons.close);
+                      this.appBarTitle =  TextField(
+                        autofocus: true,
+                        onChanged: (t) {
+                          _cliBloc.onChangedSearch(t);
+                        },
+                        style:  TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                        ),
+                        decoration:  InputDecoration(
+                          prefixIcon:  Icon(Icons.search,color: Colors.white),
+                          hintText: "Search...",
+                          hintStyle:  TextStyle(color: Colors.white)
+                        ),
+                      );}
+                      else {
+                        this.actionIcon =  Icon(Icons.search);
+                        _cliBloc.onChangedSearch("");
+                        this.appBarTitle =  Text("Clientes");
+                      }
+                    });
+        } ,),]
       ),
+   
       drawer: CustomDrawer(context),
      // body: _bodySemBloc(context),
+     
       body: _body(context),
       floatingActionButton: _fabButton(context),
     );
   }
+
+
+
 
 _fabButton(context) {
   return FloatingActionButton(
@@ -49,7 +86,7 @@ _fabButton(context) {
   _body(context) {
     return StreamBuilder<List>(
           initialData: [],
-          stream: _cliBloc.outClientes2,
+          stream: _cliBloc.outClientes,
           builder:  (context, snapshot) {
              if(snapshot.hasError)
              return Center(
@@ -69,8 +106,9 @@ _fabButton(context) {
                 padding: EdgeInsets.all(4.0),
                 itemCount: snapshot.data.length,
                 itemBuilder: (context, index) {
-                  ClienteData data =
-                      ClienteData.fromDocument(snapshot.data[index]);
+                  ClienteData data = ClienteData.fromMap(snapshot.data[index]);
+                 // data.id = snapshot.data[index].documentId;
+                  // ClienteData data = ClienteData.fromDocument(snapshot.data[index]);
                   return ClienteTile(data);
                 },
               );

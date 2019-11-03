@@ -17,7 +17,7 @@ class AppData {
 
   String wtlDespId = "";
   String wtlDespDsc = "";
-  String wtlDespData = "";
+  DateTime wtlDespDate;
   double wtlDespVlr = 0.0;
   double wtlTotDesp = 0.0;
 
@@ -26,7 +26,7 @@ class AppData {
   String wtlRecDsc = "";
   String wtlRecCli = "";
   String wtlRecCliNome = "";
-  String wtlRecData = "";
+  DateTime wtlRecDate;
   double wtlRecVlr = 0.0;
   double wtlTotRec = 0.0;
 
@@ -34,6 +34,10 @@ class AppData {
   Map<String,List<dynamic>> wtlDiasRec = {};    // Map();
   String wtlMesAno = "";
 
+  String wtlDataProgrX = "";
+  DateTime wtlDataProgr;
+  Map<String, List<Map<String, dynamic>>> wtlProgrDiaCli = {};
+  //Map<String, List> wtlProgrDiaCliDados = {};
 
   factory AppData() {
     return _appData;

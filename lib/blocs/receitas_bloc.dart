@@ -1,7 +1,6 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:marmi_app/domain/singleton.dart';
-import 'package:marmi_app/utils/date_utils.dart';
 import 'package:rxdart/rxdart.dart';
 
 class ReceitasBloc extends BlocBase {
@@ -103,14 +102,16 @@ class ReceitasBloc extends BlocBase {
     // // aqui faz 3 segundos de delay
     // await Future.delayed(Duration(seconds: 3));
 
+    if(appData.wtlopc == "I"){
+      appData.wtlRecDate = DateTime.now();
+    }
+
       Map<String, dynamic> receitaData = {
         "clienteId": appData.wtlRecCli,
         "clienteNome": appData.wtlRecCliNome,
         "descricao": appData.wtlRecDsc,
         "valor": appData.wtlRecVlr,
-        "data": (DateTime.now().day.toString().padLeft(2,"0") + "/" + 
-                DateTime.now().month.toString().padLeft(2,"0") + "/" + 
-                DateTime.now().year.toString().padLeft(2,"0") )
+        "data": appData.wtlRecDate,
       };
 
 
@@ -163,8 +164,7 @@ void setFilterReceitas(String s){
 
  //testa se receita vai ficar visivel ou nao
   bool _testaVisible(Map<String, dynamic> rec){
-    var _dataRec = rdtDMA10toDate(rec["data"]);
-    int _dias = DateTime.now().difference(_dataRec).inDays;
+    int _dias = DateTime.now().difference(rec["data"].toDate()).inDays;
     if (appData.wtlFiltroFin == "T")
      return true;
     if (appData.wtlFiltroFin == "T")

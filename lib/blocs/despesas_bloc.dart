@@ -1,7 +1,6 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:marmi_app/domain/singleton.dart';
-import 'package:marmi_app/utils/date_utils.dart';
 import 'package:rxdart/rxdart.dart';
 
 class DespesasBloc extends BlocBase {
@@ -112,12 +111,14 @@ class DespesasBloc extends BlocBase {
     // // aqui faz 3 segundos de delay
     // await Future.delayed(Duration(seconds: 3));
 
+    if(appData.wtlopc == "I"){
+      appData.wtlDespDate = DateTime.now();
+    }
+
       Map<String, dynamic> despesaData = {
         "descricao": appData.wtlDespDsc,
         "valor": appData.wtlDespVlr,
-        "data": (DateTime.now().day.toString().padLeft(2,"0") + "/" + 
-                DateTime.now().month.toString().padLeft(2,"0") + "/" + 
-                DateTime.now().year.toString().padLeft(2,"0") )
+        "data": appData.wtlDespDate
       };
 
 
@@ -168,8 +169,9 @@ void setFilterDespesas(String s){
 
  //testa se despesa vai ficar visivel ou nao
   bool _testaVisible(Map<String, dynamic> desp){
-    var _dataDesp = rdtDMA10toDate(desp["data"]);
-    int _dias = DateTime.now().difference(_dataDesp).inDays;
+   // var _dataDesp = rdtDMA10toDate(desp["data"]);
+   // int _dias = DateTime.now().difference(_dataDesp).inDays;
+    int _dias = DateTime.now().difference(desp["data"].toDate()).inDays;
     if (appData.wtlFiltroFin == "T")
      return true;
     if(_dias > int.parse(appData.wtlFiltroFin))

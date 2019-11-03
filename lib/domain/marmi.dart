@@ -61,7 +61,53 @@ class ClienteData {
           snapshot.data["recebido"].forEach(iterateMapEntry);
       }
 
-  
+  } //finaleira
+
+
+
+
+
+
+
+  // contrutor q cria o objeto a partir de um map
+  ClienteData.fromMap(Map<String, dynamic> cli){
+    id = cli["id"];
+    nome = cli["nome"];
+    endereco = cli["endereco"];
+    telefone = cli["telefone"];
+    obs = cli["obs"];
+    // isso serve para resolver problemas qdo é informado um preco inteiro no firebase
+    pessoas = cli["pessoas"] + 0;
+
+    programacao = {};
+    if (cli["programacao"] != null) {
+        void iterateMapEntry(key, value) {
+            cli["programacao"][key] = value;
+           for(int d in value) {
+              if (programacao[key] == null){
+                programacao[key] = [];
+              }
+              programacao[key].add((d).toInt());
+           }
+          }
+          // pra cada mapa faz a rotina acima
+          cli["programacao"].forEach(iterateMapEntry);
+      }
+
+
+    recebido = {};
+    if (cli["recebido"] != null) {
+        void iterateMapEntry(key, value) {
+            cli["recebido"][key] = value;
+           for(int d in value) {
+              if (recebido[key] == null){
+                recebido[key] = [];
+              }
+              recebido[key].add((d).toInt());
+           }
+          }
+          cli["recebido"].forEach(iterateMapEntry);
+      }
 
   } //finaleira
 
@@ -194,74 +240,3 @@ Map<String, dynamic> produtowtlToMap(){
 
 
 
-
-
-
-// os lixo do outro app
-
-
-
-
-
-class TipoCarro {
-  static const String classicos = "classicos";
-  static const String esportivos = "esportivos";
-  static const String luxo = "luxo";
-}
-
-
-class Carro {
-  final int id;
-  String tipo;
-  String nome;
-  String desc;
-  String urlFoto;
-  String urlVideo;
-  String latitude;
-  String longitude;
-
-
-  Carro(
-      {this.id,
-        this.nome,
-        this.tipo,
-        this.desc,
-        this.urlFoto,
-        this.urlVideo,
-        this.latitude,
-        this.longitude});
-
-  factory Carro.fromJson(Map<String, dynamic> json) {
-    return Carro(
-      id: json['id'] as int,
-      nome: json['nome'] as String,
-      tipo: json['tipo'] as String,
-      desc: json['desc'] as String,
-      urlFoto: json['urlFoto'] as String,
-      urlVideo: json['urlVideo'] as String,
-      latitude: json['latitude'] as String,
-      longitude: json['longitude'] as String,
-    );
-  }
-
-  Map toMap() {
-    Map<String,dynamic> map = {
-      "nome": nome,
-      "tipo": tipo,
-      "desc": desc,
-      "urlFoto": urlFoto,
-      "urlVideo": urlVideo,
-      "latitude": latitude,
-      "longitude": longitude,
-    };
-    if(id != null) {
-      map["id"] = id;
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return "Carro[$id]: $nome - $tipo";
-  }
-}

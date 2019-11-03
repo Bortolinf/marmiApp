@@ -30,8 +30,6 @@ class _LoginScreenState extends State<LoginScreen> {
       getUser().then((user) {
       if (user != null) {
         UserModel.of(context).firebaseUser = user;
-        print("OLÁAAAAAÁAÁÁÁÁÁ");
-        print(user.uid);
         _onSuccess();
       }
     });
@@ -49,7 +47,6 @@ class _LoginScreenState extends State<LoginScreen> {
               );
 
             if (model.isLoggedIn()) {
-              print("ESTAMOS LOGADOOOOOOOOOOOOOO");
               // 22/08/2019
               //pushReplacement(context, HomePage(UserModel.of(context).firebaseUser.uid));
               // essas duas linhas deram erro

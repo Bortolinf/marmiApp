@@ -1,5 +1,6 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:marmi_app/blocs/despesas_bloc.dart';
 import 'package:marmi_app/blocs/receitas_bloc.dart';
 import 'package:marmi_app/domain/singleton.dart';
@@ -155,13 +156,13 @@ class _FinancasPageState extends State<FinancasPage> {
                   isThreeLine: false,
                   dense: true,
                   contentPadding: EdgeInsets.only(left: 16, right: 16),
-                  title: Text(desp["data"] ), 
+                  title: Text(DateFormat('dd-MM-yyyy').format(desp["data"].toDate())), 
                   subtitle: Text(desp["descricao"]),
                   trailing: Text("R\$ ${desp["valor"].toStringAsFixed(2)}"),
                   onTap: () {
                     appData.wtlopc = "A";
                     appData.wtlDespId = desp["id"];
-                    appData.wtlDespData = desp["data"];
+                    appData.wtlDespDate = desp["data"].toDate();
                     appData.wtlDespDsc = desp["descricao"];
                     appData.wtlDespVlr = desp["valor"].toDouble();
                     showDialog(
@@ -202,13 +203,13 @@ class _FinancasPageState extends State<FinancasPage> {
                   isThreeLine: false,
                   dense: true,
                   contentPadding: EdgeInsets.only(left: 16, right: 16),
-                  title: Text(rec["data"]), 
-                  subtitle: Text(rec["descricao"]),
+                  title:  Text(DateFormat('dd-MM-yyyy').format(rec["data"].toDate())),  
+                  subtitle: Text(rec["descricao"] + " - " + rec["clienteNome"]),
                   trailing: Text("R\$ ${rec["valor"].toStringAsFixed(2)}"),
                   onTap: () {
                     appData.wtlopc = "A";
                     appData.wtlRecId = rec["id"];
-                    appData.wtlRecData = rec["data"];
+                    appData.wtlRecDate = rec["data"].toDate();
                     appData.wtlRecDsc = rec["descricao"];
                     appData.wtlRecCli = rec["clienteId"];
                     appData.wtlRecCliNome = rec["clienteNome"];

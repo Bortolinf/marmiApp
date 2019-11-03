@@ -1,7 +1,6 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:flutter/material.dart';
 import 'package:marmi_app/blocs/clientes_bloc.dart';
-import 'package:marmi_app/pages/home_page.dart';
 import 'package:marmi_app/pages/prog_cli_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:marmi_app/domain/marmi.dart';
@@ -35,7 +34,10 @@ class ClienteScreen extends StatelessWidget {
     return  
     <Widget>[
       IconButton(icon: Icon(Icons.home),
-      onPressed: (){ pushReplacement(context, HomePage()); },
+      onPressed: (){ 
+          Navigator.pop(context);
+          Navigator.pop(context); 
+       },
       ),
 
       IconButton(icon: Icon(Icons.delete),
